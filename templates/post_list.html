@@ -2,18 +2,35 @@
 
 {% block head_title %}My Posts{% endblock %}
 
+{% block search_form %}
+    <form class="navbar-form navbar-left" method="get">
+        <div class="form-group">
+          <input type="text" class="form-control" name="q" placeholder="Search posts" value="{{ request.GET.q }}">
+        </div>
+        <input type="submit" class="btn btn-default" value="Search">
+      </form>
+{% endblock search_form %}
+
 {% block content %}
 
     <div class="col-sm-8 col-sm-offset-3">
         <h1>{{ title }}</h1>
 
+        <form action="" method="GET" class="row">
+            <div class="input-group">
+                <input class="form-control" type="text" name="q" placeholder="Search posts" value="{{ request.GET.q }}">
+                <span class="input-group-btn">
+                     <button class="btn btn-default" type="submit">
+                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                     </button>
+                    <!--<input class="btn btn-default" type="submit" value="Search">-->
 
-        <form action="" method="get">
-            <input type="text" name="q" placeholder="Search posts" value="{{ request.GET.q }}">
-            <input type="submit" value="Search">
+                </span>
+             </div><!-- /input-group -->
 
         </form>
         <br/>
+
 
         <div class="row">
             {% for object in object_list %}
@@ -23,12 +40,12 @@
                             {% if object.image %}
                             <img src="{{ object.image.url }}" alt="image" class="img-responsive">
                             {% endif %}
-                         <div class="caption">
+                         <div class="caption post-detail-item">
                             {% if object.draft %}<span style="color:red;">Draft</span>
                                         {% if object.publish > todays_date %}FUTURE POST{% endif %}{% endif %}
                             <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a> <small>{{ object.publish }}</small> </h3>
                             {% if object.user.get_full_name %}<p>Author: {{ object.user.get_full_name }}</p>{% endif %}
-                             <p>{{ object.content|linebreaks|truncatechars:120 }}</p>
+                             <p class="content-markdown">{{ object.get_markdown|truncatechars_html:80 }}</p>
                             <p><a href="{{ object.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>
                           </div>
                         </div>

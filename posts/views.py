@@ -12,6 +12,8 @@ from .forms import PostForm
 
 # Create your views here.
 
+def home(request):
+    return redirect(post_list)
 
 def post_list(request):
     queryset_list = Post.objects.active()
@@ -29,7 +31,7 @@ def post_list(request):
         ).distinct()
 
 
-    paginator = Paginator(queryset_list, 2)  # Show 25 contacts per page
+    paginator = Paginator(queryset_list, 10)  # Show 25 contacts per page
 
     page = request.GET.get('page')
     try:

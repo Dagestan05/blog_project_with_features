@@ -6,6 +6,9 @@ from django.conf import settings
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 from django.utils import timezone
+
+from markdown_deux import markdown
+from django.utils.safestring import mark_safe
 # Create your models here.
 
 class PostManager(models.Manager):
@@ -40,8 +43,13 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('posts:post_detail', kwargs={'slug': self.slug})
 
+    def get_markdown(self):
+        content = self.content
+        return mark_safe(markdown(content))
+
     def __str__(self):
         return self.title
+
     class Meta:
         ordering = ['-timestamp', '-updated']
 
